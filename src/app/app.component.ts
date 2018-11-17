@@ -237,7 +237,7 @@ export class AppComponent extends BaseComponent implements OnInit {
   }
 
   public handleImage(webcamImage: WebcamImage): void {
-    console.info("received webcam image", webcamImage);
+    //console.info("received webcam image", webcamImage);
     console.log("received webcam image", webcamImage);
     this.webcamImage = webcamImage;
   }
