@@ -1,26 +1,18 @@
 //Initiallising node modules
 var express = require("express");
 var bodyParser = require("body-parser");
-var sql = require("mssql");
 var app = express();
 var https = require('https');
-var mongo = require('mongodb')
-var mongoClient = require('mongodb').MongoClient;
-
-MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    var dbo = db.db("mydb");
-    // var myobj = { name: "Company Inc", address: "Highway 37" };
-    //dbo.collection("customers").insertOne(myobj, function(err, res) {
-    //  if (err) throw err;
-    //  console.log("1 document inserted");
-    // db.close();
-    //});
-});
+app.use(express.static("color-analysis"));
 
 // Body Parser Middleware
 app.use(bodyParser.json());
+app.set("view options", {layout: false});  
+//app.engine('html', require('ejs').renderFile); 
+app.set('view engine', 'html');
+app.set('views', __dirname + "/public/views/pages");
 
+var router = express.Router();
 //CORS Middleware
 app.use(function (req, res, next) {
     //Enabling CORS 
@@ -36,34 +28,27 @@ var server = app.listen(process.env.PORT || 8080, function () {
     console.log("App now running on port", port);
 });
 
+app.get('/', function (req, res,next) {
+    res.redirect('/'); 
+   });
 
-app.post('/SubscribeEmails', function (req, res) {
-
-    jsonObject = JSON.stringify({
-        "subscribeEmail": req.body.subscribeEmail
-    });
-    // prepare the header
-    var postheaders = {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(jsonObject, 'utf8')
-    };
-    // the post options
-    var optionspost = {
-        host: 'eriderapi.apphb.com',
-        path: '/api/web',
-        method: 'POST',
+app.get('/getUser', function (req, res) {
+    console.log(req.userid);
+    // var postheaders = {
+    //     'Content-Type': 'application/json',
+    //     'Content-Length': Buffer.byteLength(jsonObject, 'utf8')
+    // };',
         headers: postheaders
+    var optionspost = {
+        host: 'https://localhost:44365/',
+        path: 'api/User/' + req.userid,
+        method: 'GET'
     }
-    console.info('Options prepared:');
-    console.info(optionspost);
-    console.info('Do the POST call');
 
-    // do the POST call
     var reqPost = https.request(optionspost, function (response) {
         console.log("statusCode: ", response.statusCode);
         // uncomment it for header details
         //  console.log("headers: ", res.headers);
-
         response.on('data', function (d) {
             console.info('POST result:\n');
             process.stdout.write(d);
@@ -78,6 +63,7 @@ app.post('/SubscribeEmails', function (req, res) {
     reqPost.on('error', function (e) {
         console.error(e);
     });
+
 });
 
 var server = app.listen(4000, function () {

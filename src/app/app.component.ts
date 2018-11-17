@@ -6,6 +6,9 @@ import { WebcamImage } from "./common/webcam/domain/webcam-image";
 import { WebcamUtil } from "./common/webcam/util/webcam.util";
 import { WebcamInitError } from "./common/webcam/domain/webcam-init-error";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { userresponse, users } from './models/users';
+import { DataService } from './services/index';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Component({
   selector: 'app-root',
@@ -14,7 +17,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class AppComponent extends BaseComponent implements OnInit {
   title = 'Color Analysis';
-  userId : string;
+  userId: string;
   public colorArray: any = {};
   showregisterLogin: string;
   stepRegister: boolean;
@@ -27,7 +30,17 @@ export class AppComponent extends BaseComponent implements OnInit {
   stepThree: boolean;
   colorPicker: any;
 
+  userResponse: userresponse;
+  userModel : users;
+
   imgUrl: string;
+  imgBase64: string;
+  loginerror: string;
+  isloginerror: boolean;
+
+  private key: string = "username";
+  private key1: string = "password";
+  private key2: string ="userId";
 
   private formSubmitAttempt: boolean;
   myform: FormGroup;
@@ -62,13 +75,13 @@ export class AppComponent extends BaseComponent implements OnInit {
   // switch to next / previous / specific webcam; true/false: forward/backwards, string: deviceId
   private nextWebcam: Subject<boolean | string> = new Subject<boolean | string>();
 
-  constructor() {
+  constructor(public dataService: DataService, private httpclient: HttpClient) {
     super();
     this.assigningColors();
   }
 
   ngOnInit() {
-    this.userId ="5bdbe75dda2d64145c233d56";  
+    this.userId = "5bdbe75dda2d64145c233d56";
     this.formSubmitAttempt = false;
     this.userFirstName = new FormControl('', [Validators.required]);
     this.userLastName = new FormControl('', [Validators.required]);
@@ -83,7 +96,9 @@ export class AppComponent extends BaseComponent implements OnInit {
 
 
     this.errors = [];
-
+    this.imgUrl = '';
+    this.imgBase64 = '';
+    this.loginerror = '';
     this.showregisterLogin = 'none';
     this.showModal = 'none';
     this.showModal1 = 'none';
@@ -93,7 +108,10 @@ export class AppComponent extends BaseComponent implements OnInit {
     this.stepThree = false;
     this.stepRegister = false;
     this.stepLogin = false;
-
+    this.isloginerror = false;
+    sessionStorage.setItem(this.key,"test");
+    sessionStorage.setItem(this.key1,'test');
+    sessionStorage.setItem(this.key2,"5bdbe75dda2d64145c233d56");
     this.myform = new FormGroup({
       userFirstName: this.userFirstName,
       userLastName: this.userLastName,
@@ -119,12 +137,14 @@ export class AppComponent extends BaseComponent implements OnInit {
     this.showregisterLogin = 'block';
     this.stepLogin = true;
     this.stepRegister = false;
-    this.showModal='none';
+    this.showModal = 'none';
     this.stepOne = false;
     this.stepTwo = false;
     this.stepThree = false;
-    this.showModal1='none';
+    this.showModal1 = 'none';
     this.showModal2 = 'none';
+    this.isloginerror = false;
+    this.loginerror = '';
   }
 
 
@@ -178,10 +198,22 @@ export class AppComponent extends BaseComponent implements OnInit {
 
   public triggerSnapshot(): void {
     this.trigger.next();
+    // this.dataService.getUsers(sessionStorage.getItem(this.key2)).subscribe((response)=>{
+    //   console.log('response from post data is ', response);
+    // }, (error) => {
+    //   console.log('error during post is ', error)
+    // });
+
     this.stepOne = false;
     this.stepTwo = false;
     this.stepThree = true;
     this.imgUrl = this.webcamImage.imageAsDataUrl;
+    this.imgBase64 = this.webcamImage.imageAsBase64;
+    
+    var data : any ;
+    data =this.webcamImage.imageAsBase64
+    
+   // console.log(this.imgBase64);
   }
 
   public toggleWebcam(): void {
@@ -269,14 +301,27 @@ export class AppComponent extends BaseComponent implements OnInit {
   }
 
   onLogin() {
-    this.showregisterLogin = 'none';
-    this.stepLogin = false;
-    this.stepRegister = false;
-    this.showModal = 'block';
-    this.stepOne = true;
+    if (this.loginForm.valid) {
+      if (this.loginUserName.value === sessionStorage.getItem(this.key) && this.loginPassword.value === sessionStorage.getItem(this.key1)) {
+        this.showregisterLogin = 'none';
+        this.stepLogin = false;
+        this.stepRegister = false;
+        this.showModal = 'block';
+        this.stepOne = true;
+        this.loginerror = '';
+        this.isloginerror = false;
+      }
+      else {
+        this.isloginerror = true;
+        this.loginerror = 'Username or Password is incorrect !!!';
+      }
+    }
+    else {
+      this.formSubmitAttemptlogin = true;
+    }
   }
 
-  openRegister(){
+  openRegister() {
     this.showregisterLogin = 'block';
     this.stepLogin = false;
     this.stepRegister = true;
