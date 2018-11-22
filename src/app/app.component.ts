@@ -7,8 +7,8 @@ import { WebcamUtil } from "./common/webcam/util/webcam.util";
 import { WebcamInitError } from "./common/webcam/domain/webcam-init-error";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { userresponse, users } from './models/users';
-import { DataService } from './services/index';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { ApiService } from './services/api.service';
 
 @Component({
   selector: 'app-root',
@@ -31,7 +31,7 @@ export class AppComponent extends BaseComponent implements OnInit {
   colorPicker: any;
 
   userResponse: userresponse;
-  userModel : users;
+  userModel: users;
 
   imgUrl: string;
   imgBase64: string;
@@ -40,7 +40,7 @@ export class AppComponent extends BaseComponent implements OnInit {
 
   private key: string = "username";
   private key1: string = "password";
-  private key2: string ="userId";
+  private key2: string = "userId";
 
   private formSubmitAttempt: boolean;
   myform: FormGroup;
@@ -75,7 +75,7 @@ export class AppComponent extends BaseComponent implements OnInit {
   // switch to next / previous / specific webcam; true/false: forward/backwards, string: deviceId
   private nextWebcam: Subject<boolean | string> = new Subject<boolean | string>();
 
-  constructor(public dataService: DataService, private httpclient: HttpClient) {
+  constructor(private httpclient: HttpClient, private api: ApiService) {
     super();
     this.assigningColors();
   }
@@ -109,9 +109,9 @@ export class AppComponent extends BaseComponent implements OnInit {
     this.stepRegister = false;
     this.stepLogin = false;
     this.isloginerror = false;
-    sessionStorage.setItem(this.key,"test");
-    sessionStorage.setItem(this.key1,'test');
-    sessionStorage.setItem(this.key2,"5bdbe75dda2d64145c233d56");
+    sessionStorage.setItem(this.key, "test");
+    sessionStorage.setItem(this.key1, 'test');
+    //  sessionStorage.setItem(this.key2,"5bdbe75dda2d64145c233d56");
     this.myform = new FormGroup({
       userFirstName: this.userFirstName,
       userLastName: this.userLastName,
@@ -198,22 +198,30 @@ export class AppComponent extends BaseComponent implements OnInit {
 
   public triggerSnapshot(): void {
     this.trigger.next();
-    // this.dataService.getUsers(sessionStorage.getItem(this.key2)).subscribe((response)=>{
-    //   console.log('response from post data is ', response);
-    // }, (error) => {
-    //   console.log('error during post is ', error)
-    // });
+    
 
-    this.stepOne = false;
-    this.stepTwo = false;
-    this.stepThree = true;
-    this.imgUrl = this.webcamImage.imageAsDataUrl;
+   
     this.imgBase64 = this.webcamImage.imageAsBase64;
-    
-    var data : any ;
-    data =this.webcamImage.imageAsBase64
-    
-   // console.log(this.imgBase64);
+
+    var data: any;
+    data = this.webcamImage.imageAsBase64
+
+     console.log(this.imgBase64);
+     this.api.saveImages(this.imgBase64, sessionStorage.getItem(this.key2)).subscribe((response) => {
+      console.log(response);
+      if (response != null) {        
+        this.stepOne = false;
+        this.stepTwo = false;
+        this.stepThree = true;
+        this.imgUrl = response["url"];
+      }      
+      else {
+        
+      }
+    }, err => {
+    console.log(err);
+
+  });
   }
 
   public toggleWebcam(): void {
@@ -302,30 +310,38 @@ export class AppComponent extends BaseComponent implements OnInit {
 
   onLogin() {
     if (this.loginForm.valid) {
-      if (this.loginUserName.value === sessionStorage.getItem(this.key) && this.loginPassword.value === sessionStorage.getItem(this.key1)) {
-        this.showregisterLogin = 'none';
-        this.stepLogin = false;
-        this.stepRegister = false;
-        this.showModal = 'block';
-        this.stepOne = true;
-        this.loginerror = '';
-        this.isloginerror = false;
-      }
-      else {
-        this.isloginerror = true;
-        this.loginerror = 'Username or Password is incorrect !!!';
-      }
-    }
+      this.api.login(this.loginUserName.value, this.loginPassword.value).subscribe((response) => {
+        console.log(response["userId"]);
+        if (response != null) {
+          sessionStorage.setItem(this.key2, response["userId"]);
+          this.showregisterLogin = 'none';
+          this.stepLogin = false;
+          this.stepRegister = false;
+          this.showModal = 'block';
+          this.stepOne = true;
+          this.loginerror = '';
+          this.isloginerror = false;
+        }      
+        else {
+          this.isloginerror = true;
+          this.loginerror = 'Username or Password is incorrect !!!';
+        }
+      }, err => {
+      console.log(err);
+
+    });
+
+  }
     else {
-      this.formSubmitAttemptlogin = true;
-    }
+  this.formSubmitAttemptlogin = true;
+}
   }
 
-  openRegister() {
-    this.showregisterLogin = 'block';
-    this.stepLogin = false;
-    this.stepRegister = true;
-    this.showModal = 'none';
-    this.stepOne = false;
-  }
+openRegister() {
+  this.showregisterLogin = 'block';
+  this.stepLogin = false;
+  this.stepRegister = true;
+  this.showModal = 'none';
+  this.stepOne = false;
+}
 }

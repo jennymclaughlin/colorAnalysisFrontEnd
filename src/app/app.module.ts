@@ -9,7 +9,7 @@ import {WebcamModule} from 'ngx-webcam';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AdunitService } from './adunit.service';
-import { DataService, DataServiceOptions } from './services/index';
+import { DataService, DataServiceOptions, ApiService } from './services/index';
 
 
 @NgModule({
@@ -25,7 +25,8 @@ import { DataService, DataServiceOptions } from './services/index';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [  DataService, 
+  providers: [ApiService,
+      DataService, 
     DataServiceOptions,
     AdunitService],
   bootstrap: [AppComponent]

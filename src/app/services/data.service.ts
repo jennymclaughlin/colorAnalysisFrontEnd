@@ -2,7 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpClient, HttpResponse, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/observable';
 import { Subject } from 'rxjs/Subject';
-
+import { users } from '../models/users';
 //import { AccountService } from './account.service';
 
 @Injectable()
@@ -34,6 +34,11 @@ export class DataService {
             req.send();
         });
     }
+
+    // public login(username: string, userpassword: string){
+    //     console.log(username);
+    //     return this.http.get('http://localhost:4000/login',{'userName': userName, 'userPassword': userpassword});
+    // }
 
     public getUsers(userId: string): Observable<HttpResponse<any>>{
         console.log(userId);
