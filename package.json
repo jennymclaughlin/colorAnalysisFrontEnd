@@ -1,10 +1,14 @@
 {
   "name": "color-analysis",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=8.9.4",
+    "npm": ">=5.6.0"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve && node server.js",
-    "build": "ng build",
+    "build": "ng build --prod  --output-path=dist/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
