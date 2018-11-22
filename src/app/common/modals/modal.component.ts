@@ -12,7 +12,7 @@ import { ModalService } from './modal.service';
 
 export class ModalComponent implements OnInit, OnDestroy {
     @Input() id: string;
-    private element: JQuery;
+    private element: jquery;
 
     constructor(private modalService: ModalService, private el: ElementRef) {
         this.element = $(el.nativeElement);
