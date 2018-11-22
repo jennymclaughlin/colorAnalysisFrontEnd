@@ -115,8 +115,8 @@ app.use(function (req, res, next) {
     //     headers : postheaders
     // };
     var optionspost = {
-        host : 'localhost:58788/', // here only the domain name    // (no http/https !)
-        path : '/api/S3Bucket',
+        host : 'dv6iu1iltl.execute-api.us-east-2.amazonaws.com', // here only the domain name    // (no http/https !)
+        path : '/Prod/api/S3Bucket',
         method : 'POST',
         headers : postheaders
     };

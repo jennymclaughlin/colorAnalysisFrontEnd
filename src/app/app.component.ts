@@ -311,9 +311,9 @@ export class AppComponent extends BaseComponent implements OnInit {
   onLogin() {
     if (this.loginForm.valid) {
       this.api.login(this.loginUserName.value, this.loginPassword.value).subscribe((response) => {
-        console.log(response["userId"]);
+        console.log(response["user"]["userId"]);
         if (response != null) {
-          sessionStorage.setItem(this.key2, response["userId"]);
+          sessionStorage.setItem(this.key2, response["user"]["userId"]);
           this.showregisterLogin = 'none';
           this.stepLogin = false;
           this.stepRegister = false;
