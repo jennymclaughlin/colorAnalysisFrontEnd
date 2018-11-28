@@ -29,7 +29,7 @@
                       <div class="col-lg-12" [ngClass]="{
                           'has-danger': userFirstName.invalid && (userFirstName.dirty || userFirstName.touched),
                           'has-success': userFirstName.valid && (userFirstName.dirty || userFirstName.touched)}">
-                        <input type="text" name="userFirstName" class="form-control" formControlName="userFirstName"
+                        <input type="text" class="form-control" formControlName="userFirstName"
                           required placeholder="First Name">
                         <div class="error text-danger" *ngIf="isFieldInvalid('userFirstName')">
                           Please Enter First Name
@@ -41,7 +41,7 @@
                           'has-danger': userLastName.invalid && (userLastName.dirty || userLastName.touched),
                           'has-success': userLastName.valid && (userLastName.dirty || userLastName.touched)}">
 
-                        <input type="text" name="userLastName" class="form-control" formControlName="userLastName"
+                        <input type="text"  class="form-control" formControlName="userLastName"
                           required placeholder="Last Name">
                         <div class="error text-danger" *ngIf="isFieldInvalid('userLastName')">
                           Please Enter Last Name
@@ -53,7 +53,7 @@
                           'has-danger': userEmail.invalid && (userEmail.dirty || userEmail.touched),
                           'has-success': userEmail.valid && (userEmail.dirty || userEmail.touched)}">
 
-                        <input type="email" name="userEmail" class="form-control" formControlName="userEmail" required
+                        <input type="email"  class="form-control" formControlName="userEmail" required
                           placeholder="Email">
                         <div class="error text-danger" *ngIf="isFieldInvalid('userEmail')">
                           Please Enter Valid Email
@@ -65,7 +65,7 @@
                             'has-danger': userName.invalid && (userName.dirty || userName.touched),
                             'has-success': userName.valid && (userName.dirty || userName.touched)}">
 
-                        <input type="text" name="userName" class="form-control" formControlName="userName" required
+                        <input type="text"  class="form-control" formControlName="userName" required
                           placeholder="User Name">
                         <div class="error text-danger" *ngIf="isFieldInvalid('userName')">
                           Please Enter User Name
@@ -77,7 +77,7 @@
                               'has-danger': userPassword.invalid && (userPassword.dirty || userPassword.touched),
                               'has-success': userPassword.valid && (userPassword.dirty || userPassword.touched)}">
 
-                        <input type="password" name="userPassword" class="form-control" formControlName="userPassword"
+                        <input type="password"  class="form-control" formControlName="userPassword"
                           placeholder="Password" required>
                         <div class="error text-danger" *ngIf="isFieldInvalid('userPassword')">
                           Please Enter Password
@@ -88,7 +88,7 @@
                       <div class="col-lg-12" [ngClass]="{
                                 'has-danger': ConfirmPassword.invalid && (ConfirmPassword.dirty || ConfirmPassword.touched),
                                 'has-success': ConfirmPassword.valid && (ConfirmPassword.dirty || ConfirmPassword.touched)}">
-                        <input type="password" name="ConfirmPassword" class="form-control" formControlName="ConfirmPassword"
+                        <input type="password"  class="form-control" formControlName="ConfirmPassword"
                           placeholder="Confirm Password" required>
                         <div class="error text-danger" *ngIf="isFieldInvalid('ConfirmPassword')">
                           Please Enter Password
@@ -150,7 +150,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row" *ngIf="isloginerror === true" >
+                  <div class="row" *ngIf="isloginerror === true">
                     <div class="col-lg-12">
                       <div class="signUpPanel">
                         <span>{{ loginerror }}</span>
@@ -205,7 +205,7 @@
                 <div class="buttons">
                   <div class="leftbtn" style="float: left;">
                     <a (click)="acceptPic();">Next</a>
-                  </div>  
+                  </div>
                   <div class="rightPic" style="float: right;">
                     <a (click)="retakePic()">Retake</a>
                   </div>
@@ -226,39 +226,40 @@
                   <div class="col-md-2"></div>
                   <div class="col-md-8">
                     <div class="clrStrip clrStripFirst">
-                      <input class="clrinput" [(colorPicker)]="colorArray['pink']" [style.background]="colorArray['pink']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['pink1']" [style.background]="colorArray['pink1']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['pink2']" [style.background]="colorArray['pink2']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['pink3']" [style.background]="colorArray['pink3']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['pink4']" [style.background]="colorArray['pink4']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['pink5']" [style.background]="colorArray['pink5']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['pink6']" [style.background]="colorArray['pink6']" />
+                      <!-- Removed this [(colorPicker)]="colorArray['pink']" -->
+                      <input class="clrinput" [style.background]="colorArray['pink']" />
+                      <input class="clrinput" [style.background]="colorArray['pink1']" />
+                      <input class="clrinput" [style.background]="colorArray['pink2']" />
+                      <input class="clrinput" [style.background]="colorArray['pink3']" />
+                      <input class="clrinput" [style.background]="colorArray['pink4']" />
+                      <input class="clrinput" [style.background]="colorArray['pink5']" />
+                      <input class="clrinput" [style.background]="colorArray['pink6']" />
                       <div>
-                        <input type="checkbox">
+                        <input type="checkbox" (change)="pinkChange()" [(ngModel)]="chkpink" >
                       </div>
                     </div>
                     <div class="clrStrip">
-                      <input class="clrinput" [(colorPicker)]="colorArray['blue']" [style.background]="colorArray['blue']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['blue1']" [style.background]="colorArray['blue1']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['blue2']" [style.background]="colorArray['blue2']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['blue3']" [style.background]="colorArray['blue3']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['blue4']" [style.background]="colorArray['blue4']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['blue5']" [style.background]="colorArray['blue5']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['blue6']" [style.background]="colorArray['blue6']" />
+                      <input class="clrinput" [style.background]="colorArray['blue']" />
+                      <input class="clrinput" [style.background]="colorArray['blue1']" />
+                      <input class="clrinput" [style.background]="colorArray['blue2']" />
+                      <input class="clrinput" [style.background]="colorArray['blue3']" />
+                      <input class="clrinput" [style.background]="colorArray['blue4']" />
+                      <input class="clrinput" [style.background]="colorArray['blue5']" />
+                      <input class="clrinput" [style.background]="colorArray['blue6']" />
                       <div>
-                        <input type="checkbox" checked>
+                        <input type="checkbox"  (change)="blueChange()" [(ngModel)]="chkblue" >
                       </div>
                     </div>
                     <div class="clrStrip">
-                      <input class="clrinput" [(colorPicker)]="colorArray['green']" [style.background]="colorArray['green']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['green1']" [style.background]="colorArray['green1']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['green2']" [style.background]="colorArray['green2']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['green3']" [style.background]="colorArray['green3']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['green4']" [style.background]="colorArray['green4']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['green5']" [style.background]="colorArray['green5']" />
-                      <input class="clrinput" [(colorPicker)]="colorArray['green6']" [style.background]="colorArray['green6']" />
+                      <input class="clrinput" [style.background]="colorArray['green']" />
+                      <input class="clrinput" [style.background]="colorArray['green1']" />
+                      <input class="clrinput" [style.background]="colorArray['green2']" />
+                      <input class="clrinput" [style.background]="colorArray['green3']" />
+                      <input class="clrinput" [style.background]="colorArray['green4']" />
+                      <input class="clrinput" [style.background]="colorArray['green5']" />
+                      <input class="clrinput" [style.background]="colorArray['green6']" />
                       <div>
-                        <input type="checkbox">
+                        <input type="checkbox"   (change)="greenChange()"  [(ngModel)]="chkgreen" >
                       </div>
                     </div>
                   </div>
@@ -276,8 +277,6 @@
           </div>
         </div>
       </div>
-
-
       <div class="row">
         <div class="col-md-12">
           <div class="modal modal1" id="productAddModal1" tabindex="-1" role="dialog" [ngStyle]="{'display':showModal2}">
@@ -288,61 +287,61 @@
                   <div class="col-md-1"></div>
                   <div class="col-md-10">
                     <div style="border: 1px solid; float: left;">
-                      <div class="colorBox" [(colorPicker)]="colorArray['clrBlue']" [style.background]="colorArray['clrBlue']">
+                      <div class="colorBox" [(colorPicker)]="selectedColorArray['color']" [style.background]="selectedColorArray['color']">
                         <div class="row">
                           <input class="chk" type="checkbox">
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                           <p class="colorName">Sky</p>
-                        </div>
+                        </div> -->
                       </div>
-                      <div class="colorBox " [(colorPicker)]="colorArray['clrBlue1']" [style.background]="colorArray['clrBlue1']">
+                      <div class="colorBox" [(colorPicker)]="selectedColorArray['color1']"  [style.background]="selectedColorArray['color1']">
                         <div class="row">
                           <input type="checkbox" class="chk">
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                           <p class="colorName">baby blue</p>
-                        </div>
+                        </div> -->
                       </div>
-                      <div class="colorBox" [(colorPicker)]="colorArray['clrBlue2']" [style.background]="colorArray['clrBlue2']">
+                      <div class="colorBox" [(colorPicker)]="selectedColorArray['color2']"  [style.background]="selectedColorArray['color2']">
                         <div class="row">
                           <input type="checkbox" class="chk">
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                           <p class="colorName">maya</p>
-                        </div>
+                        </div> -->
                       </div>
-                      <div class="colorBox" [(colorPicker)]="colorArray['clrBlue3']" [style.background]="colorArray['clrBlue3']">
+                      <div class="colorBox" [(colorPicker)]="selectedColorArray['color3']"  [style.background]="selectedColorArray['color3']">
                         <div class="row">
                           <input type="checkbox" class="chk">
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                           <p class="colorName">cornflower</p>
-                        </div>
+                        </div> -->
                       </div>
-                      <div class="colorBox" [(colorPicker)]="colorArray['clrBlue4']" [style.background]="colorArray['clrBlue4']">
+                      <div class="colorBox" [(colorPicker)]="selectedColorArray['color4']"  [style.background]="selectedColorArray['color4']">
                         <div class="row">
                           <input type="checkbox" class="chk">
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                           <p class="colorName">azure</p>
-                        </div>
+                        </div> -->
                       </div>
-                      <div class="colorBox" [(colorPicker)]="colorArray['clrBlue5']" [style.background]="colorArray['clrBlue5']">
+                      <div class="colorBox" [(colorPicker)]="selectedColorArray['color5']"  [style.background]="selectedColorArray['color5']">
                         <div class="row">
                           <input type="checkbox" class="chk">
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                           <p class="colorName white">navy</p>
-                        </div>
+                        </div> -->
                       </div>
-                      <div class="colorBox" [(colorPicker)]="colorArray['clrBlue6']" [style.background]="colorArray['clrBlue6']">
+                      <div class="colorBox" [(colorPicker)]="selectedColorArray['color6']"  [style.background]="selectedColorArray['color6']">
                         <div class="row">
                           <input type="checkbox" class="chk">
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                           <p class="colorName white">royal</p>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -357,11 +356,17 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-12">
+                  <div class="col-md-6">
+                    <div class="submitColors">
+                      <a (click)="goPrevious()">Previous</a>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
                     <div class="submitColors">
                       <a (click)="submitFinal()">Submit</a>
                     </div>
                   </div>
+
                 </div>
               </div>
             </div>
@@ -370,4 +375,3 @@
       </div>
     </div>
   </div>
-</div>

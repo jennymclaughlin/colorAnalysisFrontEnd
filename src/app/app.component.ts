@@ -19,6 +19,7 @@ export class AppComponent extends BaseComponent implements OnInit {
   title = 'Color Analysis';
   userId: string;
   public colorArray: any = {};
+  public selectedColorArray: any={};
   showregisterLogin: string;
   stepRegister: boolean;
   stepLogin: boolean;
@@ -29,6 +30,12 @@ export class AppComponent extends BaseComponent implements OnInit {
   stepTwo: boolean;
   stepThree: boolean;
   colorPicker: any;
+
+
+  chkpink: boolean;
+  chkblue: boolean;
+  chkgreen: boolean;
+  colorSelected:string;
 
   userResponse: userresponse;
   userModel: users;
@@ -41,6 +48,7 @@ export class AppComponent extends BaseComponent implements OnInit {
   private key: string = "username";
   private key1: string = "password";
   private key2: string = "userId";
+  private keyUrl: string = "url";
 
   private formSubmitAttempt: boolean;
   myform: FormGroup;
@@ -94,7 +102,9 @@ export class AppComponent extends BaseComponent implements OnInit {
     this.loginUserName = new FormControl('', [Validators.required]);
     this.loginPassword = new FormControl('', [Validators.required]);
 
-
+    this.chkblue = true;
+    this.chkpink = false;
+    this.chkgreen = false;
     this.errors = [];
     this.imgUrl = '';
     this.imgBase64 = '';
@@ -109,8 +119,8 @@ export class AppComponent extends BaseComponent implements OnInit {
     this.stepRegister = false;
     this.stepLogin = false;
     this.isloginerror = false;
-    sessionStorage.setItem(this.key, "test");
-    sessionStorage.setItem(this.key1, 'test');
+    //  sessionStorage.setItem(this.key, "test");
+    // sessionStorage.setItem(this.key1, 'test');
     //  sessionStorage.setItem(this.key2,"5bdbe75dda2d64145c233d56");
     this.myform = new FormGroup({
       userFirstName: this.userFirstName,
@@ -134,11 +144,11 @@ export class AppComponent extends BaseComponent implements OnInit {
   }
 
   openSignUpIn() {
-    this.showregisterLogin = 'block';
+    this.showregisterLogin = 'none';
     this.stepLogin = true;
     this.stepRegister = false;
-    this.showModal = 'none';
-    this.stepOne = false;
+    this.showModal = 'block';
+    this.stepOne = true;
     this.stepTwo = false;
     this.stepThree = false;
     this.showModal1 = 'none';
@@ -175,6 +185,36 @@ export class AppComponent extends BaseComponent implements OnInit {
   }
 
   submitColor() {
+    if(this.colorSelected=="pink"){
+      this.selectedColorArray = {};
+      this.selectedColorArray["color"]=this.colorArray["pink"];
+      this.selectedColorArray["color1"]=this.colorArray["pink1"];
+      this.selectedColorArray["color2"]=this.colorArray["pink2"];
+      this.selectedColorArray["color3"]=this.colorArray["pink3"];
+      this.selectedColorArray["color4"]=this.colorArray["pink4"];
+      this.selectedColorArray["color5"]=this.colorArray["pink5"];
+      this.selectedColorArray["color6"]=this.colorArray["pink6"];
+    }
+    else if(this.colorSelected=="green"){
+      this.selectedColorArray = {};
+      this.selectedColorArray["color"]=this.colorArray["green"];
+      this.selectedColorArray["color1"]=this.colorArray["green1"];
+      this.selectedColorArray["color2"]=this.colorArray["green2"];
+      this.selectedColorArray["color3"]=this.colorArray["green3"];
+      this.selectedColorArray["color4"]=this.colorArray["green4"];
+      this.selectedColorArray["color5"]=this.colorArray["green5"];
+      this.selectedColorArray["color6"]=this.colorArray["green6"];
+     
+    }else {
+      this.selectedColorArray = {};
+      this.selectedColorArray["color"]=this.colorArray["blue"];
+      this.selectedColorArray["color1"]=this.colorArray["blue1"];
+      this.selectedColorArray["color2"]=this.colorArray["blue2"];
+      this.selectedColorArray["color3"]=this.colorArray["blue3"];
+      this.selectedColorArray["color4"]=this.colorArray["blue4"];
+      this.selectedColorArray["color5"]=this.colorArray["blue5"];
+      this.selectedColorArray["color6"]=this.colorArray["blue6"];
+    }
     this.showModal = 'none';
     this.stepOne = true;
     this.stepTwo = false;
@@ -188,6 +228,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     this.stepTwo = false;
     this.showModal1 = 'none';
     this.showModal2 = 'none';
+    this.showregisterLogin = "block";
   }
 
   public retakePic() {
@@ -198,30 +239,24 @@ export class AppComponent extends BaseComponent implements OnInit {
 
   public triggerSnapshot(): void {
     this.trigger.next();
-    
-
-   
     this.imgBase64 = this.webcamImage.imageAsBase64;
-
     var data: any;
     data = this.webcamImage.imageAsBase64
-
-     console.log(this.imgBase64);
-     this.api.saveImages(this.imgBase64, sessionStorage.getItem(this.key2)).subscribe((response) => {
-      console.log(response);
-      if (response != null) {        
+    this.api.saveImages(this.imgBase64).subscribe((response) => {
+      if (response != null) {
+        this.imgUrl = response["url"]
+        sessionStorage.setItem(this.keyUrl, response["url"]);
         this.stepOne = false;
         this.stepTwo = false;
         this.stepThree = true;
-        this.imgUrl = response["url"];
-      }      
+      }
       else {
-        
+
       }
     }, err => {
-    console.log(err);
+      console.log(err);
 
-  });
+    });
   }
 
   public toggleWebcam(): void {
@@ -310,8 +345,7 @@ export class AppComponent extends BaseComponent implements OnInit {
 
   onLogin() {
     if (this.loginForm.valid) {
-      this.api.login(this.loginUserName.value, this.loginPassword.value).subscribe((response) => {
-        console.log(response["user"]["userId"]);
+      this.api.login(this.loginUserName.value, this.loginPassword.value, sessionStorage.getItem(this.keyUrl)).subscribe((response) => {
         if (response != null) {
           sessionStorage.setItem(this.key2, response["user"]["userId"]);
           this.showregisterLogin = 'none';
@@ -321,27 +355,62 @@ export class AppComponent extends BaseComponent implements OnInit {
           this.stepOne = true;
           this.loginerror = '';
           this.isloginerror = false;
-        }      
+        }
         else {
           this.isloginerror = true;
           this.loginerror = 'Username or Password is incorrect !!!';
         }
       }, err => {
-      console.log(err);
+        console.log(err);
 
-    });
+      });
 
-  }
+    }
     else {
-  this.formSubmitAttemptlogin = true;
-}
+      this.formSubmitAttemptlogin = true;
+    }
   }
 
-openRegister() {
-  this.showregisterLogin = 'block';
-  this.stepLogin = false;
-  this.stepRegister = true;
-  this.showModal = 'none';
-  this.stepOne = false;
-}
+  onUserSubmit() {
+    if (this.myform.valid) {
+      console.log("VALID");
+    } else {
+      console.log("Not VALID");
+    }
+  }
+
+  openRegister() {
+    this.showregisterLogin = 'block';
+    this.stepLogin = false;
+    this.stepRegister = true;
+    this.showModal = 'none';
+    this.stepOne = false;
+  }
+
+  goPrevious() {
+    this.showModal = 'none';
+    this.stepOne = true;
+    this.stepTwo = false;
+    this.showModal1 = 'block';
+    this.showModal2 = 'none';
+  }
+  pinkChange() {
+    this.chkpink = true;
+    this.chkblue = false;
+    this.chkgreen = false;
+    this.colorSelected="pink";
+  }
+  blueChange() {
+    this.chkpink = false;
+    this.chkblue = true;
+    this.chkgreen = false; 
+    this.colorSelected="blue";
+  }
+  greenChange() { 
+    this.chkpink = false;
+    this.chkblue = false;
+    this.chkgreen = true;
+    this.colorSelected="green";
+  }
+
 }

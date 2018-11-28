@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { ColorPickerModule } from 'ngx-color-picker'; 
 import {WebcamModule} from 'ngx-webcam';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { MaterialModule } from './material/material.module';
 import { AdunitService } from './adunit.service';
 import { DataService, DataServiceOptions, ApiService } from './services/index';
 
@@ -20,13 +20,14 @@ import { DataService, DataServiceOptions, ApiService } from './services/index';
     BrowserModule,
     AppRoutingModule,
     ColorPickerModule,
+    MaterialModule,
     WebcamModule,    
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule
   ],
   providers: [ApiService,
-      DataService, 
+    DataService, 
     DataServiceOptions,
     AdunitService],
   bootstrap: [AppComponent]

@@ -25,16 +25,20 @@ export class ApiService {
     return this.http.post('http://localhost:4000/SubscribeEmails', {'subscribeEmail' : emailval})
   }
 
- public login(userName: string, userPassword: string) {  
-    return this.http.post('http://localhost:4000/login', {'username' : userName, 'userpassword': userPassword});
+ public login(userName: string, userPassword: string, imageUrl : string) {  
+    return this.http.post('http://localhost:4000/login', {'username' : userName, 'userpassword': userPassword, 'imageUrl': imageUrl});
   }
 
 
-  public saveImages(filebase64: string, userId: string){
-    return this.http.post('http://localhost:4000/saveimage', {'filebase64' : filebase64, 'userId': userId});
+  public saveImages(filebase64: string){
+    console.log(filebase64);
+    return this.http.post('http://localhost:4000/saveimage', {'filebase64' : filebase64});
   }
 
   public getUsers(userId : string){
     return this.http.post('http://localhost:4000/getUser', { 'id': userId});
+  }
+  public register(_users: users){
+    return this.http.post('http://localhost:4000/saveimage', {'userId' : "", 'userName': _users.userName,'userFirstName' : _users.userFirstName, 'userLastName': _users.userLastName,'userEmail' : _users.userEmail, 'userPassword': _users.userPassword,'userImageUrl': _users.userImageUrl});
   }
 }
