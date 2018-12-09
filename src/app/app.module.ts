@@ -5,16 +5,19 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ColorPickerModule } from 'ngx-color-picker'; 
-import {WebcamModule} from 'ngx-webcam';
+import { WebcamModule } from 'ngx-webcam';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material/material.module';
 import { AdunitService } from './adunit.service';
 import { DataService, DataServiceOptions, ApiService } from './services/index';
-
+import { BaseComponent } from './common/base/base.component';
+import { ModalComponent } from './common/modals/modal.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BaseComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
@@ -26,10 +29,12 @@ import { DataService, DataServiceOptions, ApiService } from './services/index';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [ApiService,
+  providers: [
+    ApiService,
     DataService, 
     DataServiceOptions,
-    AdunitService],
+    AdunitService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '../app/common/base/base.component';
 
 import { Observable, Subject } from 'rxjs';
-import { WebcamImage } from "./common/webcam/domain/webcam-image";
-import { WebcamUtil } from "./common/webcam/util/webcam.util";
-import { WebcamInitError } from "./common/webcam/domain/webcam-init-error";
+import { WebcamUtil, WebcamInitError, WebcamImage } from 'ngx-webcam';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { userresponse, users } from './models/users';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
@@ -119,9 +117,6 @@ export class AppComponent extends BaseComponent implements OnInit {
     this.stepRegister = false;
     this.stepLogin = false;
     this.isloginerror = false;
-    //  sessionStorage.setItem(this.key, "test");
-    // sessionStorage.setItem(this.key1, 'test');
-    //  sessionStorage.setItem(this.key2,"5bdbe75dda2d64145c233d56");
     this.myform = new FormGroup({
       userFirstName: this.userFirstName,
       userLastName: this.userLastName,

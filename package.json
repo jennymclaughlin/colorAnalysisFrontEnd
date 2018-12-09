@@ -7,7 +7,7 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve && node server.js",
+    "start": "ng build --prod && node server.js",
     "build": "ng build --prod  --output-path=dist/",
     "test": "ng test",
     "lint": "ng lint",
@@ -36,6 +36,7 @@
     "jquery": "^3.3.1",
     "ngx-color-picker": "^6.8.0",
     "ngx-webcam": "^0.2.0",
+    "node-sass": "^4.11.0",
     "rxjs": "~6.3.3",
     "rxjs-compat": "^6.3.3",
     "typescript": "^3.1.6",

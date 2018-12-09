@@ -1,10 +1,23 @@
 var express = require("express");
 var bodyParser = require("body-parser");
-var app = express(); 
 var https = require('https');
+var http = require('http');
 var cors = require('cors');
+
+var app = express(); 
+
 // Body Parser Middleware
 app.use(bodyParser.json()); 
+
+var functionHost = "dv6iu1iltl.execute-api.us-east-2.amazonaws.com";
+var functionURL = "/Prod/api/S3Bucket";
+
+const port = process.env.PORT || 4000;
+
+app.use(express.static(__dirname + '/dist/ColorAnalysis'));
+
+app.get('/*', (req,res) => res.sendFile(path.join(__dirname)));
+
 var originsWhitelist = [
     'http://localhost:4200',      //this is my front-end url for development
     // 'http://www.myproductionurl.com'
@@ -17,8 +30,9 @@ var originsWhitelist = [
     },
     credentials:true
   }
-  //here is the magic
-  app.use(cors(corsOptions));
+
+//here is the magic
+app.use(cors(corsOptions));
 //CORS Middleware
 app.use(function (req, res, next) {
     //Enabling CORS 
@@ -28,19 +42,12 @@ app.use(function (req, res, next) {
     next();
 });
 
-//Setting up server
- var server = app.listen(process.env.PORT || 8080, function () {
-    var port = server.address().port;
-    console.log("App now running on port", port);
- });
-
  app.post('/login', function(req, res){
     jsonObject = JSON.stringify({
         "username" : req.body.username,
         "userpassword": req.body.userpassword,
         "imageUrl": req.body.imageUrl
     });
-    console.log(req.body);
 
     var postheaders = {
         'Content-Type' : 'application/json',
@@ -49,26 +56,18 @@ app.use(function (req, res, next) {
         'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT',
         'Access-Control-Allow-Headers':'Origin, X-Requested-With, contentType,Content-Type, Accept, Authorization'
     };
+
     var optionspost = {
-        host : 'dv6iu1iltl.execute-api.us-east-2.amazonaws.com', // here only the domain name    // (no http/https !)
-        
-        path : '/Prod/api/S3Bucket/login', // the rest of the url with parameters if needed
+        host : functionHost, // here only the domain name    // (no http/https !)        
+        path : functionURL+'/login', 
         method : 'POST', // do GET,
         headers : postheaders
     };
-    console.info('Options prepared:');
-    console.info(optionspost);
-    console.info('Do the GET call');
 
     var reqPost = https.request(optionspost, function(response) {
-        console.log("statusCode: ", response.statusCode);
-        // uncomment it for header details
-      console.log("headers: ", res.headers);
      
     response.on('data', function(d) {
-            console.info('POST result:\n');
             process.stdout.write(d);
-            console.info('\n\nPOST completed');
             res.send(d);
         });
     });
@@ -83,26 +82,17 @@ app.use(function (req, res, next) {
 
  app.post('/getUser', function (req, res){
     var optionsget = {
-        host : 'dv6iu1iltl.execute-api.us-east-2.amazonaws.com', // here only the domain name    // (no http/https !)        
-        path : '/Prod/api/S3Bucket/user/'+req.body.id, // the rest of the url with parameters if needed
+        host : functionHost,     
+        path : functionURL+'/user/'+req.body.id, 
         method : 'GET' // do GET
     };
-    console.info('Options prepared:');
-    console.info(optionsget);
-    console.info('Do the GET call');
 
     var reqGet = https.request(optionsget, function(response) {
-        console.log("statusCode: ", response.statusCode);
-        // uncomment it for header details
-    //  console.log("headers: ", res.headers);   
     
     response.on('data', function(d) {
-            console.info('GET result:\n');
             process.stdout.write(d);
-            console.info('\n\nCall completed');
             res.send(d);
-        });
-    
+        });    
     });
     
     reqGet.end();
@@ -129,30 +119,20 @@ app.use(function (req, res, next) {
         'Access-Control-Allow-Headers':'Origin, X-Requested-With, contentType,Content-Type, Accept, Authorization'
     };
     var optionspost = {
-        host : 'dv6iu1iltl.execute-api.us-east-2.amazonaws.com', // here only the domain name    // (no http/https !)
-        path : '/Prod/api/S3Bucket/Register',
+        host : functionHost, // here only the domain name    // (no http/https !)
+        path : functionURL+'/Register',
         method : 'POST',
         headers : postheaders
     };
-    console.info('Options prepared:');
-    console.info(optionspost);
-    console.info('Do the POST call');
-     
-    // do the POST call
+
     var reqPost = https.request(optionspost, function(response) {
-        console.log("statusCode: ", response.statusCode);
-        // uncomment it for header details
-      console.log("headers: ", res.headers);
      
     response.on('data', function(d) {
-            console.info('POST result:\n');
             process.stdout.write(d);
-            console.info('\n\nPOST completed');
             res.send(d);
         });
     });
      
-    // write the json data
     reqPost.write(jsonObject);
     reqPost.end();
     reqPost.on('error', function(e) {
@@ -165,7 +145,6 @@ app.use(function (req, res, next) {
         "filebase64" : req.body.filebase64
     });
 
-    console.log(req.body);
     var postheaders = {
         'Content-Type' : 'application/json',
         'Content-Length' : Buffer.byteLength(jsonObject, 'utf8'),
@@ -174,26 +153,16 @@ app.use(function (req, res, next) {
         'Access-Control-Allow-Headers':'Origin, X-Requested-With, contentType,Content-Type, Accept, Authorization'
     };
     var optionspost = {
-        host : 'dv6iu1iltl.execute-api.us-east-2.amazonaws.com', // here only the domain name    // (no http/https !)
-        path : '/Prod/api/S3Bucket',
+        host : functionHost,
+        path : functionURL,
         method : 'POST',
         headers : postheaders
     };
-   
-    console.info('Options prepared:');
-    console.info(optionspost);
-    console.info('Do the POST call');
      
     // do the POST call
-    var reqPost = https.request(optionspost, function(response) {
-        console.log("statusCode: ", response.statusCode);
-        // uncomment it for header details
-      console.log("headers: ", res.headers);
-     
-    response.on('data', function(d) {
-            console.info('POST result:\n');
+    var reqPost = https.request(optionspost, function(response) {     
+        response.on('data', function(d) {
             process.stdout.write(d);
-            console.info('\n\nPOST completed');
             res.send(d);
         });
     });
@@ -206,6 +175,11 @@ app.use(function (req, res, next) {
     });
  })
 
-var server = app.listen(4000, function () {
-    console.log('Server is running..');
-});
+
+const server = http.createServer(app);
+
+//Setting up server
+server.listen(port, () => {
+    var port1 = server.address().port;
+    console.log("App now running on port", port1);
+ });

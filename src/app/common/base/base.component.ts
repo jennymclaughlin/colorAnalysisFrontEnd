@@ -6,6 +6,7 @@ import { ViewMode, page_size } from '../constants';
 	templateUrl: './base.component.html',
 	styleUrls: ['./base.component.css']
 })
+
 export class BaseComponent implements OnInit {
 	page_size: number = page_size;
 	view_mode: ViewMode;
